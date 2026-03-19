@@ -19,3 +19,12 @@ Compile with:
 
 ```bash
 g++ -std=c++17 -Wall -Wextra -pedantic Main.cpp RecCal.cpp -o toy-app
+
+## Examples
+
+```bash
+./toy-app "2+3*4"        # 14
+./toy-app "(2+3)*4"      # 20
+./toy-app "-(2+5)*2"     # -14
+./toy-app "2*-4"         # -8
+./toy-app "10/2+7"       # 12
