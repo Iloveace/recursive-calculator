@@ -169,6 +169,7 @@ bool RecursiveCalculator::isMulOrDiv() const
     return peek() == '*' || peek() == '/';
 }
 
+
 bool RecursiveCalculator::isPlusOrMinus() const
 {
     return peek() == '+' || peek() == '-';

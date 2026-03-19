@@ -37,6 +37,6 @@ private:
 
     // ===== State =====
     std::string_view expr;
-    std::size_t index;
+    std::size_t index{0};
 };
 
