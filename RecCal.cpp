@@ -19,7 +19,7 @@ double RecursiveCalculator::evaluate()
 }
 
 /*
-* This function parses an expression from the expression,
+* This function parses an expression,
 * handling addition and subtraction.
 */
 double RecursiveCalculator::parseExpression()
