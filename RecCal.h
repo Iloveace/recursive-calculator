@@ -9,32 +9,34 @@
 * and unary + / - using recursive descent parsing.
 */
 
-class RecursiveCalculator
-{
-
+class RecursiveCalculator {
 public:
-    explicit RecursiveCalculator(std::string_view expression);
+    // ===== Public Interface =====
+    Explicit RecursiveCalculator(std::string_view input);
     double evaluate();
 
 private:
-    std::string_view expr;
+    // ===== Core Parsing (high-level grammar) =====
+    double parseExpression(); // + and -
+    double parseTerm();       // * and /
+    double parseFactor();     // unary, parentheses
+    double parseNumber();     // numbers
 
-    std::size_t index{0};
-
-    bool isAtEnd() const;
+    // ===== Helpers =====
     char peek() const;
+    char get();
     void skipWhitespace();
+    bool isAtEnd() const;
     bool isMinus() const;
     bool isPlus() const;
     bool isLeftParen() const;
     bool isRightParen() const;
     bool isPlusOrMinus() const;
-    double parseExpression();
     bool isMulOrDiv() const;
-    double parseTerm();
-    double parseFactor();
     bool isValidDigit() const;
-    double parseNumber();
 
+    // ===== State =====
+    std::string_view input;
+    size_t index;
 };
 #endif // RECURSIVE_CALCULATOR_H
