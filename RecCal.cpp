@@ -121,20 +121,41 @@ double RecursiveCalculator::parseFactor()
 /*
 * This function checks if the current character is a
 * valid digit and parses a number from the expression,
-* handling multi-digit numbers as well.
+* handling multi-digit numbers as well as floating-point numbers.
 */
 double RecursiveCalculator::parseNumber()
 {
-    if (!isValidDigit())
-    {
-        throw std::runtime_error("Expected a number");
-    }
-    double value{0};
+    double value{0.0};
+    bool hasDigits = false;
+
+    // Parse integer part
     while (isValidDigit())
     {
-        value = value * 10 + (peek() - '0');
+        hasDigits = true;
+        value = value * 10.0 + (peek() - '0');
         index++;
     }
+
+    // Parse fractional part
+    if (isDecimal())
+    {
+        index++; // consume '.'
+        double weight = 0.1;
+
+        while (isValidDigit())
+        {
+            hasDigits = true;
+            value += (peek() - '0') * weight;
+            weight /= 10.0;
+            index++;
+        }
+    }
+
+    if (!hasDigits)
+    {
+        throw std::runtime_error("Invalid number format");
+    }
+
     return value;
 }
 
@@ -142,6 +163,12 @@ bool RecursiveCalculator::isAtEnd() const
 {
     return index >= expr.size();
 }
+
+bool RecursiveCalculator::isDecimal() const
+{
+    return !isAtEnd() && peek() == '.';
+}
+
 
 bool RecursiveCalculator::isMinus() const
 {

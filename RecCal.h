@@ -25,6 +25,7 @@ private:
 
     // ===== Helpers =====
     bool isAtEnd() const;
+    bool isDecimal() const;
     bool isLeftParen() const;
     bool isRightParen() const;
     bool isMinus() const;
