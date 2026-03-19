@@ -126,7 +126,7 @@ double RecursiveCalculator::parseFactor()
 double RecursiveCalculator::parseNumber()
 {
     double value{0.0};
-    bool hasDigits = false;
+    bool hasDigits{false};
 
     // Parse integer part
     while (isValidDigit())
