@@ -17,72 +17,70 @@ double RecursiveCalculator::evaluate()
     }
     return value;
 }
-bool RecursiveCalculator::isAtEnd() const
-{
-    return index >= expr.size();
-}
-char RecursiveCalculator::peek() const
-{
-    if (isAtEnd())
-    {
-        return '\0';
-    }
-    return expr[index];
-}
-void RecursiveCalculator::skipWhitespace()
-{
-    while (!isAtEnd() && std::isspace(static_cast<unsigned char>(peek())))
-    {
-        index++;
-    }
-}
-bool RecursiveCalculator::isValidDigit() const
-{
-    return !isAtEnd() && std::isdigit(static_cast<unsigned char>(peek()));
-}
+
 /*
-* This function checks if the current character is a
-* valid digit and parses a number from the expression,
-* handling multi-digit numbers as well.
+* This function parses an expression from the expression,
+* handling addition and subtraction.
 */
-double RecursiveCalculator::parseNumber()
+double RecursiveCalculator::parseExpression()
 {
-    if (!isValidDigit())
+    double value{parseTerm()};
+    skipWhitespace();
+    while (isPlusOrMinus())
     {
-        throw std::runtime_error("Expected a number");
-    }
-    double value{0};
-    while (isValidDigit())
-    {
-        value = value * 10 + (peek() - '0');
-        index++;
+        char op = peek();
+        index++; // Consume operator
+        double nextValue = parseTerm();
+        if (op == '+')
+        {
+            value += nextValue;
+        }
+        else
+        {
+            value -= nextValue;
+        }
+        skipWhitespace();
     }
     return value;
 }
 
-bool RecursiveCalculator::isMinus() const
+/*
+* This function parses a term from the expression,
+* handling multiplication and division.
+*/
+double RecursiveCalculator::parseTerm()
 {
-    return peek() == '-';
+    double value{parseFactor()};
+    skipWhitespace();
+
+    while (isMulOrDiv())
+    {
+        char op = peek();
+        index++;
+        double nextValue = parseFactor();
+
+        if (op == '*')
+        {
+            value *= nextValue;
+        }
+        else
+        {
+            if (nextValue == 0)
+            {
+                throw std::runtime_error("Division by zero");
+            }
+            value /= nextValue;
+        }
+
+        skipWhitespace();
+    }
+
+    return value;
 }
 
-bool RecursiveCalculator::isPlus() const
-{
-    return peek() == '+';
-}
-
-bool RecursiveCalculator::isLeftParen() const
-{
-    return peek() == '(';
-}
-
-bool RecursiveCalculator::isRightParen() const
-{
-    return peek() == ')';
-}
 /*
 * This function parses a factor from the expression,
-* handling unary minus and plus signs.
-* It also handles parentheses for grouping and operator precedence.
+* handling unary minus and plus signs, as well as parentheses.
 */
 double RecursiveCalculator::parseFactor()
 {
@@ -119,73 +117,81 @@ double RecursiveCalculator::parseFactor()
 
     return parseNumber();
 }
+
 /*
-* This function checks if the current
-* character is a multiplication or division operator.
+* This function checks if the current character is a
+* valid digit and parses a number from the expression,
+* handling multi-digit numbers as well.
 */
+double RecursiveCalculator::parseNumber()
+{
+    if (!isValidDigit())
+    {
+        throw std::runtime_error("Expected a number");
+    }
+    double value{0};
+    while (isValidDigit())
+    {
+        value = value * 10 + (peek() - '0');
+        index++;
+    }
+    return value;
+}
+
+bool RecursiveCalculator::isAtEnd() const
+{
+    return index >= expr.size();
+}
+
+bool RecursiveCalculator::isMinus() const
+{
+    return peek() == '-';
+}
+
+bool RecursiveCalculator::isPlus() const
+{
+    return peek() == '+';
+}
+
+bool RecursiveCalculator::isLeftParen() const
+{
+    return peek() == '(';
+}
+
+bool RecursiveCalculator::isRightParen() const
+{
+    return peek() == ')';
+}
+
+
 bool RecursiveCalculator::isMulOrDiv() const
 {
     return peek() == '*' || peek() == '/';
-}
-/*
-* This function parses a term from the expression, handling multiplication and division.
-*/
-double RecursiveCalculator::parseTerm()
-{
-    double value{parseFactor()};
-    skipWhitespace();
-
-    while (isMulOrDiv())
-    {
-        char op = peek();
-        index++;
-        double nextValue = parseFactor();
-
-        if (op == '*')
-        {
-            value *= nextValue;
-        }
-        else
-        {
-            if (nextValue == 0)
-            {
-                throw std::runtime_error("Division by zero");
-            }
-            value /= nextValue;
-        }
-
-        skipWhitespace();
-    }
-
-    return value;
 }
 
 bool RecursiveCalculator::isPlusOrMinus() const
 {
     return peek() == '+' || peek() == '-';
 }
-/*
-* This function parses an expression from the expression,
-* handling addition and subtraction.
-*/
-double RecursiveCalculator::parseExpression()
+
+bool RecursiveCalculator::isValidDigit() const
 {
-    double value{parseTerm()};
-    skipWhitespace();
-    while (isPlusOrMinus())
+    return !isAtEnd() && std::isdigit(static_cast<unsigned char>(peek()));
+}
+
+char RecursiveCalculator::peek() const
+{
+    if (isAtEnd())
     {
-        char op = peek();
-        index++; // Consume operator
-        double nextValue = parseTerm();
-        if (op == '+')
-        {
-            value += nextValue;
-        }
-        else
-        {
-            value -= nextValue;
-        }
-        skipWhitespace();
+        return '\0';
     }
-    return value;
+    return expr[index];
+}
+
+void RecursiveCalculator::skipWhitespace()
+{
+    while (!isAtEnd() && std::isspace(static_cast<unsigned char>(peek())))
+    {
+        index++;
+    }
 }

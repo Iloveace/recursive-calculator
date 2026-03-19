@@ -1,5 +1,5 @@
-#ifndef RECURSIVE_CALCULATOR_H
-#define RECURSIVE_CALCULATOR_H
+#pragma once
+
 #include <string_view> // For std::string_view
 #include <cstddef> // For std::size_t
 
@@ -9,10 +9,11 @@
 * and unary + / - using recursive descent parsing.
 */
 
-class RecursiveCalculator {
+class RecursiveCalculator
+{
 public:
     // ===== Public Interface =====
-    Explicit RecursiveCalculator(std::string_view input);
+    explicit RecursiveCalculator(std::string_view expression);
     double evaluate();
 
 private:
@@ -23,20 +24,19 @@ private:
     double parseNumber();     // numbers
 
     // ===== Helpers =====
-    char peek() const;
-    char get();
-    void skipWhitespace();
     bool isAtEnd() const;
-    bool isMinus() const;
-    bool isPlus() const;
     bool isLeftParen() const;
     bool isRightParen() const;
-    bool isPlusOrMinus() const;
+    bool isMinus() const;
+    bool isPlus() const;
     bool isMulOrDiv() const;
+    bool isPlusOrMinus() const;
     bool isValidDigit() const;
+    char peek() const;
+    void skipWhitespace();
 
     // ===== State =====
-    std::string_view input;
-    size_t index;
+    std::string_view expr;
+    std::size_t index;
 };
-#endif // RECURSIVE_CALCULATOR_H
+
