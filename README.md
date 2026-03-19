@@ -20,7 +20,7 @@ Compile with `make`, or run:
 
 ```bash
 g++ -std=c++17 -Wall -Wextra -pedantic Main.cpp RecCal.cpp -o toy-app
-
+```
 ## Examples
 
 ```bash
@@ -30,5 +30,5 @@ g++ -std=c++17 -Wall -Wextra -pedantic Main.cpp RecCal.cpp -o toy-app
 ./toy-app "2*-4"         # -8
 ./toy-app "10/2+7"       # 12
 ./toy-app "2.2*(3+2)"    # 11
-./toy-app ".5 + 1.5"     # 2
+./toy-app ".5+1.5"     # 2
 ```
